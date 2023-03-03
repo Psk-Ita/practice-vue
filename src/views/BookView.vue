@@ -69,18 +69,14 @@ onUpdated(() =>{
     font-size: 1.8rem;
     line-height: 1.3;
     margin-top: 20px;
-
-
 }
 
 .book-widget .description{
     margin-top: 20px;
-
 }
 
 .book-widget .isbn{
     margin-top: 20px;
-
 }
 
 
@@ -94,6 +90,5 @@ onUpdated(() =>{
 .image{
     float:left;
     margin-right: 30px;
-
 }
 </style>
