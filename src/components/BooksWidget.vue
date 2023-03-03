@@ -9,7 +9,7 @@ import {
   } from "vue"
 
   const props = defineProps({
-    // book: Book
+    book: Object
 })
 
 
@@ -33,13 +33,13 @@ import {
         value: number;
         displayValue: number;
     }; -->
-<!-- <div class="book-widget">
+<div class="book-widget">
     <img :src="book?.image" :alt="book?.title">
     <h2 class="title">{{ book?.title }}</h2>
     <h3 class="author">{{ book?.author }}</h3>
     <h3 class="author">{{ book?.ISBN }}</h3>
     <div class="description">{{ book?.summary }}</div>
-</div> -->
+</div>
 </template>
 
 
