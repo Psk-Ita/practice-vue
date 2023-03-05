@@ -10,7 +10,7 @@ export interface Book {
     identifiers: Record<string, string[]>
     title: string,
     subtitle?:string,
-    authors: KeyItem[],
+    authors: string[],
     publish_date: string,
     publishers: string[]
     covers: number[],
@@ -30,7 +30,13 @@ export interface getBookDetailPayload {
 }
 
 export const getBookDetails = async({id} : getBookDetailOptions) : Promise<getBookDetailPayload> => {
-    const response = await fetch(`https://openlibrary.org/books/${id}.json`);
-    const book = await response.json() as Book;
+    const apiResponse = await fetch(`https://openlibrary.org/books/${id}.json`);
+    const rawBook = await apiResponse.json();
+
+    const book : Book ={
+        ...rawBook,
+        authors:rawBook.authors?.map(({key} : KeyItem) => key.replace(/^\/authors\//gim, ''))
+    }
+
     return Promise.resolve({ book });
 }

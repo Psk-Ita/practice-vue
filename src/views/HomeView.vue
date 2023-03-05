@@ -1,35 +1,90 @@
 <script setup lang="ts">
-  import { reactive, ref } from 'vue';
-  import { getRecentChanges } from '@/api/recentchanges';
+  import { useRecentChanges, recentDefaults, type recentChangesPayload } from '@/api/recentchanges';
   import BookDetails from '@/components/BookDetails.vue';
   import BookSkeleton from '@/components/BookSkeleton.vue'
+  import {  reactive, ref, watch } from 'vue';
 
-  const list = reactive<string[]>([])
-  const loading = ref(true);
+  const options = reactive(recentDefaults)
+  let result = ref<recentChangesPayload>()
 
-  getRecentChanges().then((result) => {
-    list.splice(0, list.length, ...result.list.map((x) => ''));
+  const callApi = () => {
+    result.value = useRecentChanges(options);    
+  }
 
-    result.list.forEach((x, idx) => {
-      setTimeout(() => {list.splice(idx, 1, x)}, idx * 99 )
-    });
+  // everytime an attribute of options change, we ask server for data updating
+  // since we are also using an input, some de-bouncing method should be put in place to avoid calls on each key-up
+  watch(options, callApi);
 
-    loading.value=false;
-  });
+  // first call could be left in the root (setup) or moved inside onMounter 
+  callApi();
 </script>
 
 <template>
-  <div v-if="loading" class="results">
-    <template v-for="idx in 15" :key="idx">
+  <div class="options">     
+    <fieldset>
+      <legend>action</legend>
+      <select v-model="options.kind">
+        <option value="update">update</option>
+        <!-- option value="new-account">new-account</option -->
+        <!-- option value="lists">lists</option -->
+        <option value="add-cover">add-cover</option>
+        <option value="edit-book">edit-book</option>
+        <!-- option value="add-photo">add-photo</option -->
+        <option value="add-book">add-book</option>
+        <option value="merge-authors">merge-authors</option>
+        <!-- option value="merge-works">merge-works</option -->
+      </select>
+    </fieldset>
+    <fieldset>
+      <legend>quantity</legend>
+      <input type="number" v-model="options.limit" />
+    </fieldset>
+  </div>
+  <div v-if="result?.isLoading" class="results">
+    <template v-for="idx in parseFloat(`${options.limit}`)" :key="idx">
       <BookSkeleton class="element" />
     </template>
   </div>
-  <div v-else class="results">
-    <BookDetails v-for="el in list" :key="el" class="element" :id="el"/>
+  <div class="results">
+    <BookDetails v-for="el in result?.list" :key="el" class="element" :id="el"/>
   </div>
 </template>
 
 <style scoped lang="scss">  
+  .options{
+    fieldset{
+      &>*:not(legend){
+        width: 100%;
+        border: 1px solid #dedede;
+        border-radius: 4px;
+      }
+
+      legend{
+        color: #4285F4;
+        padding: 4px;
+        font-size: .8rem;
+      }
+      option{
+        text-align: center;
+      }
+      input[type="number"]{
+        text-align: right;
+      }
+
+      margin: 0 .5rem;
+      max-width: 200px;
+      min-width: 200px;
+      border: 1px solid #dedede;
+      border-radius: 8px;
+    }
+    width: fit-content;
+    display: flex;
+    transform: translateX(-50%);
+    margin-left: 50%;
+    align-items: center;
+    flex-direction: row;
+    align-content: space-around;
+  }
   .results{
     display: flex;
     flex-wrap: wrap;

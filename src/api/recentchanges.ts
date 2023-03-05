@@ -1,39 +1,58 @@
-export interface getRecentChangesOptions {
+import { reactive, ref, type Ref } from 'vue'
+
+export interface recentChangesOptions {
     kind?:string,
     limit?:number,
     pattern?:string;
 }
 
 export interface Action {
-    key:string,
-    revision:number
+    key: string,
+    authors: string[],
+    revision: number
 } 
 
 export interface RecentChange  {
     changes:Action[]
 } 
 
-export interface getRecentChangesPayload {
+export interface recentChangesPayload {
+    isLoading: Ref<boolean>;
     list:string[],
 }
 
-const defOptions : getRecentChangesOptions = {kind:'add-book', limit:15, pattern:'^/books/*'};
+export const recentDefaults : recentChangesOptions = {kind:'add-book', limit:5, pattern:'^/books/*'};
 
-export const getRecentChanges = async({kind, limit, pattern} = defOptions) : Promise<getRecentChangesPayload> => {
-    const dtNow = new Date();
-    const year = `${dtNow.getFullYear()}`;
-    const month = `${1 + dtNow.getMonth()}`.padStart(2, '0');
+// getRecentChanges became useRecentChanges since it is an hook now, using ref and reactive from vue
+export function useRecentChanges(props:recentChangesOptions = recentDefaults) : recentChangesPayload {
+    const list = reactive<string[]>([])
+    const isLoading = ref(false);
 
-    const datePart = `/${year}/${month}`;
-    const kindPart = kind ? `/${kind}` : '';
-    const limitPart = limit ? `?limit=${limit}` : ''
+    const doFetch = async() => {
+        isLoading.value=true;
 
-    const matchExp = new RegExp(`${pattern}`, 'gim');
+        const {kind, limit, pattern} = {...recentDefaults, ...props};
+        const matchExp = new RegExp(`${pattern}`, 'gim');
 
-    const response = await fetch(`https://openlibrary.org/recentchanges${datePart}${kindPart}.json${limitPart}`);
-    const rawData = await response.json() as RecentChange[];
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    const list = (rawData ?? []).map(({changes}) => (changes ?? []).find((change) => matchExp.test(`${change.key}`))?.key?.replace(matchExp, '') || '');
-    return Promise.resolve({ list });
+        const dtNow = new Date();
+        const year = `${dtNow.getFullYear()}`;
+        const month = `${1 + dtNow.getMonth()}`.padStart(2, '0');
+    
+        const datePart = `/${year}/${month}`;
+        const kindPart = kind ? `/${kind}` : '';
+        const limitPart = limit ? `?limit=${limit}` : ''
+    
+        const apiResponse = await fetch(`https://openlibrary.org/recentchanges${datePart}${kindPart}.json${limitPart}`);
+        const rawData = await apiResponse.json() as RecentChange[];
+        // await new Promise((resolve) => setTimeout(resolve, 3000));
+        const wList = (rawData ?? []).map(({changes}) => (changes ?? []).find((change) => matchExp.test(`${change.key}`))?.key?.replace(matchExp, '') || '');        
+        list.splice(0, list.length, ...wList);
+
+        isLoading.value=false;
+    };
+
+    doFetch();
+
+    return { list, isLoading } ;
 }
 
