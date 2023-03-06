@@ -4,16 +4,15 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <header>
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-      </nav>
+    <nav>
+      <RouterLink to="/">Home</RouterLink>
+    </nav>
   </header>
 
   <RouterView />
 </template>
 
 <style>
-
 header nav {
   display: flex;
   flex-direction: row;

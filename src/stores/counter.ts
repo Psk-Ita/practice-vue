@@ -1,12 +1,11 @@
-import { ref, computed } from 'vue'
+import type { Book } from '@/api/books'
 import { defineStore } from 'pinia'
 
-export const useCounterStore = defineStore('counter', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
-    count.value++
-  }
-
-  return { count, doubleCount, increment }
+export interface BookState {
+  books: Record<string, Book>
+}
+export const useBookStore = defineStore('books-cache', {
+  state: (): BookState => ({
+    books: {}
+  })
 })

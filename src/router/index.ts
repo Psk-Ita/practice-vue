@@ -11,18 +11,18 @@ const router = createRouter({
       component: HomeView
     },
     {
-     path: '/book/:id',
-     name: 'book',
-     // lazy
-     component: () => import('../views/BookView.vue')
-   },
+      path: '/book/:id',
+      name: 'book',
+      // lazy
+      component: () => import('../views/BookView.vue')
+    },
     {
-       path: '/author/:id',
-       name: 'author',
-       // lazy
-       component: () => import('../views/AuthorView.vue')
-     }
- ]
+      path: '/author/:id',
+      name: 'author',
+      // lazy
+      component: () => import('../views/AuthorView.vue')
+    }
+  ]
 })
 
 export default router
