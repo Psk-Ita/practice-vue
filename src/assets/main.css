@@ -37,3 +37,12 @@ a,
 body{
   padding:1em
 }
+
+.bold{
+  font-weight: bold;
+}
+
+.separator {
+  width: 100%;
+  border-bottom: 1px solid black;
+}

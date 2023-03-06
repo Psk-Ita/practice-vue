@@ -50,3 +50,8 @@ npm run test:unit
 ```sh
 npm run lint
 ```
+
+### api
+https://bookstore.docs.apiary.io/#reference
+http://private-b716af-bookstore.apiary-mock.com/data/books
+https://bookstore.docs.apiary.io/#reference/data/books

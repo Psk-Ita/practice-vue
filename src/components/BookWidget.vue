@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Book } from "@/interfaces/Book";
+import { useDataStore } from "@/stores/useDataStore";
 import {
     ref,
     reactive,
@@ -7,6 +8,7 @@ import {
     onMounted,
     watch
   } from "vue"
+import { RouterLink } from "vue-router";
 
 //   const props = defineProps({
 //     book: Book
@@ -15,15 +17,21 @@ const props = defineProps<{
   book: Book
 }>()
 
+const dataStore = useDataStore();
 
+
+const setDataInStore = () => {
+    dataStore.selectedAuthor = props.book.author;
+    dataStore.selectedISBN = props.book.ISBN;
+}
 
 </script>
 
 <template>
-  <div class="book-widget">
-        <img class="image" height="300" :src="book?.image" :alt="book?.title">
-        <div class="title">{{ book?.title }}</div>
-        <h3 class="author">{{ book?.author }}</h3>
+  <div class="book-widget" @click="">
+        <RouterLink @click="setDataInStore()" to="/book-detail"><img class="image" height="300" :src="book?.image" :alt="book?.title"></RouterLink>
+        <RouterLink @click="setDataInStore()" to="/book-detail"><div class="title">{{ book?.title }}</div></RouterLink>
+        <RouterLink @click="setDataInStore()" to="/author"><h3 class="author">{{ book?.author }}</h3></RouterLink>
         <div class="description">{{ book?.summary }}</div>
         <h3 class="isbn">ISBN: {{ book?.ISBN }}</h3>
     </div>
