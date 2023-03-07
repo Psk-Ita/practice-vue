@@ -5,6 +5,7 @@ import {
     ref, reactive, computed, onMounted, watch, onUpdated
 } from "vue"
 import { getBookByISBN } from '@/api/api'
+import { checkCompatEnabled } from "@vue/compiler-core";
 defineProps<{
     authorId: number
    
@@ -13,7 +14,7 @@ defineProps<{
 
 const dataStore = useDataStore();
 let authorData: Author | null = null;
-let data = ref(null);
+let data: any = ref(null);
 let selectedLink = ref('');
 
 
@@ -28,6 +29,15 @@ async function getBookByISBN(isbn: number | string){
 function goToLink(selectedLink: string){
     console.log('selectedLink', selectedLink);
 } 
+
+const check = () => {
+    // selectedLink.value = selectedLink.value.replace("http://bookstore.apiary.io:80", "")
+}
+
+watch(selectedLink, (newSelectedLink) => {
+    selectedLink.value = selectedLink.value.replace("http://bookstore.apiary.io:80", "https://private-b716af-bookstore.apiary-mock.com/")
+    console.log(`newSelectedLink is ${newSelectedLink}`)
+})
 
 onMounted(() => {
 
@@ -54,7 +64,7 @@ onMounted(() => {
     <p>{{ data?.book?.author?.biography || ''  }}</p>
 
 
-    <select name="links"  v-model="selectedLink">
+    <select name="links" @click="check()" v-model="selectedLink">
         <option v-for="link in data?.links" :value="link.href">{{ link.rel }}</option>
     </select>
     

@@ -5,15 +5,43 @@ import {
     ref, reactive, computed, onMounted, watch, onUpdated
 } from "vue"
 import { getBookByISBN } from '@/api/api'
+
+export interface BookByISBN {
+    
+    book:{
+       ISBN: number,
+       title: string,
+       author:{
+          id: string,
+          name: string,
+          biography: string,
+          image:string
+       },
+       summary: string ,
+       image: string,
+       price:{
+          currency:string,
+          value: number,
+          displayValue: string
+       }
+    },
+    links:[
+       {
+          rel:string,
+          href:string
+       },
+    ]
+}
 defineProps<{
     authorId: number
    
 }>()
 
 
+
 const dataStore = useDataStore();
 let authorData: Author | null = null;
-let data = ref(null);
+let data : any = ref(null);
 let selectedLink = ref('');
 
 
@@ -45,7 +73,7 @@ onMounted(() => {
 <main>
     <h1>Book Detail</h1>
     <br>
-    <img class="image" height="300" :src="data?.book?.image" :alt="book?.title">
+    <img class="image" height="300" :src="data?.book?.image" :alt="data?.book?.title">
 
     <h1 class="bold">{{data?.book.title}}</h1> 
     <h2 class="bold">{{ data?.book?.author?.name || '' }}</h2>
@@ -53,12 +81,13 @@ onMounted(() => {
     <h3>{{data?.book.price.value}} {{data?.book.price.currency}}</h3>
     <p>{{data?.book.summary}}</p>
     <h3>{{data?.book.ISBN}}</h3>
+    <div class="separator mb-10px"></div>
+
     <img :src="data?.book?.author?.image" height="200" alt="">
     <!-- <p>{{ data }}</p> -->
     <br>
     <br>    
 
-    <div class="separator"></div>
     <h2 class="bold">{{ data?.book?.author?.name || '' }}</h2>
     <br>
     <p>{{ data?.book?.author?.biography || ''  }}</p>

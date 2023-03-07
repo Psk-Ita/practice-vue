@@ -29,7 +29,7 @@ const setDataInStore = () => {
 
 <template>
   <div class="book-widget" @click="">
-        <!-- <RouterLink @click="setDataInStore()" to="/book-detail"><img class="image" height="300" :src="book?.image" :alt="book?.title"></RouterLink> -->
+        <RouterLink @click="setDataInStore()" to="/book-detail"><img class="image" height="300" :src="book?.image" :alt="book?.title"></RouterLink>
         <RouterLink @click="setDataInStore()" to="/book-detail"><div class="title">{{ book?.title }}</div></RouterLink>
         <RouterLink @click="setDataInStore()" to="/author"><h3 class="author">{{ book?.author }}</h3></RouterLink>
         <div class="description">{{ book?.summary }}</div>
