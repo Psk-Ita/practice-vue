@@ -45,14 +45,14 @@ onMounted(() => {
 <main>
     <h1>Book Detail</h1>
     <br>
-    <img class="image" height="300" :src="data.book?.image" :alt="book?.title">
+    <img class="image" height="300" :src="data?.book?.image" :alt="book?.title">
 
-    <h1 class="bold">{{data.book.title}}</h1> 
+    <h1 class="bold">{{data?.book.title}}</h1> 
     <h2 class="bold">{{ data?.book?.author?.name || '' }}</h2>
 
-    <h3>{{data.book.price.value}} {{data.book.price.currency}}</h3>
-    <p>{{data.book.summary}}</p>
-    <h3>{{data.book.ISBN}}</h3>
+    <h3>{{data?.book.price.value}} {{data?.book.price.currency}}</h3>
+    <p>{{data?.book.summary}}</p>
+    <h3>{{data?.book.ISBN}}</h3>
     <img :src="data?.book?.author?.image" height="200" alt="">
     <!-- <p>{{ data }}</p> -->
     <br>
