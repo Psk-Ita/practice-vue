@@ -1,4 +1,4 @@
-import { useAuthorStore } from '@/stores/author'
+import { useCacheStore } from '@/stores/cache'
 
 export interface getAuthorDetailOptions {
   id: string
@@ -10,7 +10,7 @@ export interface Author {
 }
 
 export interface getAuthorDetailsPayload {
-  author: Author
+  author: Author | undefined
 }
 
 export const getAuthorDetails = async ({
@@ -18,13 +18,13 @@ export const getAuthorDetails = async ({
 }: getAuthorDetailOptions): Promise<getAuthorDetailsPayload> => {
   if (!id) return Promise.reject()
 
-  const authorStore = useAuthorStore()
-  let author: Author = authorStore.authors[id]
+  const cacheStore = useCacheStore()
+  let author: Author|undefined = cacheStore.getCache<Author>({key:id, cacheType:'Author'});
 
   if (!author) {
     const apiResponse = await fetch(`https://openlibrary.org/authors/${id}.json`)
     author = (await apiResponse.json()) as Author
-    authorStore.authors[id] = author
+    cacheStore.setCache({key:id, cacheType:'Author', payload:author});
   }
 
   return Promise.resolve({ author })

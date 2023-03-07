@@ -1,4 +1,4 @@
-import { useBookStore } from '@/stores/counter'
+import { useCacheStore } from '@/stores/cache'
 
 export interface getBookDetailOptions {
   id: string
@@ -28,7 +28,7 @@ export interface Book {
 }
 
 export interface getBookDetailPayload {
-  book: Book
+  book: Book | undefined
 }
 
 export const getBookDetails = async ({
@@ -36,8 +36,8 @@ export const getBookDetails = async ({
 }: getBookDetailOptions): Promise<getBookDetailPayload> => {
   if (!id) return Promise.reject()
 
-  const bookStore = useBookStore()
-  let book: Book = bookStore.books[id]
+  const cacheStore = useCacheStore()
+  let book: Book|undefined = cacheStore.getCache<Book>({key:id, cacheType:'Book'});
 
   if (!book) {
     const apiResponse = await fetch(`https://openlibrary.org/books/${id}.json`)
@@ -46,7 +46,7 @@ export const getBookDetails = async ({
       ...rawBook,
       authors: rawBook.authors?.map(({ key }: KeyItem) => key.replace(/^\/authors\//gim, ''))
     }
-    bookStore.books[id] = book
+    cacheStore.setCache({key:id, cacheType:'Book', payload:book});
   }
 
   // await new Promise (resolve => setTimeout(resolve, 3000))
