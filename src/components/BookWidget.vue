@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useStore } from '@/stores/store'
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 
 const props = defineProps({
   index: Number
@@ -10,6 +10,12 @@ const props = defineProps({
 //data
 const store = useStore()
 const router = useRouter()
+
+//computed
+const getImage = computed(() => {
+  let param = props.index + 1
+  return `https://covers.openlibrary.org/b/id/${param}-M.jpg`
+})
 
 //methods
 function navigateTo() {
@@ -25,10 +31,7 @@ onMounted(() => {
 
 <template>
   <div class="box" @click="navigateTo()">
-    <img
-      src="https://i0.wp.com/thealmanian.com/wp-content/uploads/2019/01/product_image_thumbnail_placeholder.png"
-      alt="book cover"
-    />
+    <img :src="getImage" alt="book cover" />
     <pre>{{ store.getRecentBooks[index].key }}</pre>
   </div>
 </template>
