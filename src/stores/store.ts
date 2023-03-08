@@ -4,31 +4,18 @@ import { api } from '../api/api'
 
 export const useStore = defineStore('store', () => {
   //state
-  let books = ref([] as Book[])
+  let books = ref([] as any)
 
   //getters
-  const getBooks = computed(() => books.value)
+  const getRecentBooks = computed(() => books.value)
 
   //actions
-  async function loadBooks() {
-    api.fetchBooks().then((response) => {
-      books.value = response as Book[]
-      console.log('loadBooks ', response)
+  async function loadRecentBooks() {
+    api.fetchRecentBooks().then((response) => {
+      books.value = response as any
+      console.log('loadRecentBooks ', response)
     })
   }
 
-  return { getBooks, loadBooks }
+  return { getRecentBooks, loadRecentBooks,}
 })
-
-interface Book {
-  ISBN: number
-  author: string
-  image: string
-  price: {
-    currency: string
-    displayValue: string
-    value: number
-  }
-  summary: string
-  title: string
-}
