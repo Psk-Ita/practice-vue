@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/prettierrc",
+  "semi": true, # semicolons at ends of statement
+  "useTabs": false, # spaces instead of tabs
+  "tabWidth": 2, # number of spaces
+  "endOfLine": "auto", # correct end of line
+  "printWidth": 150, # preferred width (not same as eslint max-length)
+  "singleQuote": true, # use quotes instead of double quotes
+  "arrowParens": "always", # use bracked in arrow functions
+  "trailingComma": "none", # removes trailing comma inside objects
+  "jsxSingleQuote": true, # single quotes for jsx
+  "jsxBracketSameLine": true, # closing bracked in same line
+  "htmlWhitespaceSensitivity": "strict", # whitespace inside html is significant
+}
