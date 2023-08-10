@@ -1,0 +1,5 @@
+{
+    "editor.defaultFormatter": "Vue.volar", 
+    "prettier.configPath": "../.prettierrc.yaml",
+    "editor.formatOnSave": true
+}
